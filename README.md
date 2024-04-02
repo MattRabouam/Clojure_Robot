@@ -1,3 +1,5 @@
+Version 1.0 du 02/04/2024
+
 # Clojure_Robot
 The application is a simulation of a toy robot moving on a square tabletop, of dimensions 5 units x 5 units.
 
