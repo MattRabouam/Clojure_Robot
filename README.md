@@ -1,3 +1,13 @@
+# Version 2.0 en dev
+Update to make :
+- Learn to use Git and integrate it properly into my program. Create a “dev” branch.
+
+- Break down my code with functions and use a structure.
+
+- Learn and use unit tests (using core_test.clj?).
+
+- Incorporate file reading.
+
 # Version 1.0 du 02/04/2024
 
 # Clojure_Robot
