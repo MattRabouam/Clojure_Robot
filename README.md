@@ -1,8 +1,8 @@
-# Version 2.0 en dev
+# Version 2.0 in dev
 Update to make :
-- Learn to use Git and integrate it properly into my program. Create a “dev” branch.
+- [DO] Learn to use Git and integrate it properly into my program. Create a “dev” branch.
 
-- Break down my code with functions and use a structure.
+- [DO] Break down my code with functions and use a structure.
 
 - Learn and use unit tests (using core_test.clj?).
 
