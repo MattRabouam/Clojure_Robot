@@ -4,7 +4,7 @@ Update to make :
 
 - [DO] Break down my code with functions and use a structure.
 
-- Learn and use unit tests (using core_test.clj?).
+- [DO] Learn and use unit tests. Using core_test.clj and lein test to lauch. I changed a few functions to make it work better for testing.
 
 - Incorporate file reading.
 
