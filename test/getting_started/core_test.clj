@@ -2,6 +2,41 @@
   (:require [clojure.test :refer :all]
             [getting-started.core :refer :all]))
 
+(deftest test-read_data_txt
+  (testing "Test read_data_txt function"
+    (do
+      (read_data_txt)
+      (is (= ["PLACE" "1" "1" "NORTH"] @in_data_text))
+
+      (reset! name_data_text "data_dont_exist.txt")
+      (read_data_txt)
+      (is (= ["File don't exist" @name_data_text] @in_data_text))
+
+      (reset! name_data_text "data_test.txt")
+      (read_data_txt)
+      (is (= true (test_in_data_text)))
+
+      (reset! in_data_text ["File exist"])
+      (test_in_data_text)
+      (is (= ["PLACE isn't found at start of data"] @in_data_text))
+
+      (reset! in_data_text ["PLACE" "1" "NORTH"])
+      (test_in_data_text)
+      (is (= ["Incorrect element number"] @in_data_text))
+
+      (reset! in_data_text ["PLACE" "5" "1" "NORTH"])
+      (test_in_data_text)
+      (is (= ["Element X incorrect"] @in_data_text))
+
+      (reset! in_data_text ["PLACE" "1" "8" "NORTH"])
+      (test_in_data_text)
+      (is (= ["Element Y incorrect"] @in_data_text))
+
+      (reset! in_data_text ["PLACE" "1" "1" "NORD"])
+      (test_in_data_text)
+      (is (= ["Element orientation incorrect"] @in_data_text)))))
+
+
 (deftest test-select_orientation
   (testing "Test select_orientation function"
     (do 

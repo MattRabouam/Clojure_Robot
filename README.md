@@ -6,7 +6,9 @@ Update to make :
 
 - [DO] Learn and use unit tests. Using core_test.clj and lein test to lauch. I changed a few functions to make it work better for testing.
 
-- Incorporate file reading.
+- [DO] Incorporate file reading and unit tests.
+
+- Create the interface for reading the data_test.txt file.
 
 # Version 1.0 du 02/04/2024
 

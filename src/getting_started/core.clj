@@ -1,48 +1,85 @@
 (ns getting-started.core
-   (:gen-class))
+  (:gen-class))
 
-;; Pour afficher un terminal et lire qu'un caractère du clavier
- (require '[lanterna.terminal :as t])
+;; To display a terminal and read only one character from the keyboard
+(require '[lanterna.terminal :as t])
+
+;; To read data.txt
+(require '[clojure.java.io :as io])
+(require '[clojure.string :as str])
+(def name_data_text (atom "data_test.txt"))
+(def in_data_text (atom nil))
 
 ;; For the player's name, only letters are allowed
- (def alphabet (atom "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZàâäéèêëïîôöùûüÿçÀÂÄÉÈÊËÏÎÔÖÙÛÜŸÇ"))
+(def alphabet (atom "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZàâäéèêëïîôöùûüÿçÀÂÄÉÈÊËÏÎÔÖÙÛÜŸÇ"))
+
 ;; Used to delete a line in the terminal
- (def empty_string (atom "                                          "))
+(def empty_string (atom "                                          "))
+
+;; Valid number in X and Y
+(def valid_X_Y (atom #{"0" "1" "2" "3" "4"}))
+
+;; Valid Orientation
+(def valid_orientation (atom #{"NORTH" "WEST" "EAST" "SOUTH"}))
+
 ;; Keyword structure to manage player information
- (def player-map (atom {:name "" :position_x nil :position_y nil :nswe nil}))
- (def quitloop (atom false))
- (def moveloop (atom false))
- (def reloop (atom false))
- (def presskey (atom nil))
- (def to_display (atom nil))
+(def player-map (atom {:name "" :position_x nil :position_y nil :nswe nil}))
+(def quitloop (atom false))
+(def moveloop (atom false))
+(def reloop (atom false))
+(def presskey (atom nil))
+(def to_display (atom nil))
+
+;; Read the data_test.txt file
+(defn read_data_txt [] (if (.exists (io/file @name_data_text))
+                         [(reset! in_data_text ["File exist"])
+                          (with-open [rdr (io/reader @name_data_text)]
+                            ;;  The function (some) allows you to exit the loop as soon as "PLACE" is found
+                            (some (fn [line]
+                                    (let [tokens (str/split line #",")]
+                                      (when (= "PLACE" (first tokens))
+                                        [(reset! in_data_text tokens) true])))
+                                  (line-seq rdr)))]
+                         (reset! in_data_text ["File don't exist" @name_data_text])))
+
+;; Testing the contents of data.txt
+(defn test_in_data_text [] (cond
+                             (= (nth @in_data_text 0) "File don't exist") (reset! in_data_text [(str "File " (nth @in_data_text 1) " don't exist")])
+                             (= @in_data_text ["File exist"]) (reset! in_data_text ["PLACE isn't found at start of data"])
+                             (not= (count @in_data_text) 4) (reset! in_data_text ["Incorrect element number"])
+                             (not (contains? @valid_X_Y (nth @in_data_text 1))) (reset! in_data_text ["Element X incorrect"])
+                             (not (contains? @valid_X_Y (nth @in_data_text 2))) (reset! in_data_text ["Element Y incorrect"])
+                             (not (contains? @valid_orientation (nth @in_data_text 3))) (reset! in_data_text ["Element orientation incorrect"])
+                             :else true
+                             ))
 
 ;; Moves the cursor to a specific coordinate and displays text on the terminal
- (defn text_display [term tab_text] (doseq [i tab_text]
-                                      (if (string? i)
-                                        (t/put-string term i)
-                                        (t/move-cursor term (get-in i [0]) (get-in i [1])))))
+(defn text_display [term tab_text] (doseq [i tab_text]
+                                     (if (string? i)
+                                       (t/put-string term i)
+                                       (t/move-cursor term (get-in i [0]) (get-in i [1])))))
 
 ;; Choose an orientation according to the selected key
- (defn select_orientation [] (cond
-                               (or (= @presskey \z) (= @presskey :up)) (swap! player-map assoc :nswe "NORTH")
-                               (or (= @presskey \q) (= @presskey :left)) (swap! player-map assoc :nswe "WEST")
-                               (or (= @presskey \d) (= @presskey :right)) (swap! player-map assoc :nswe "EAST")
-                               (or (= @presskey \s) (= @presskey :down)) (swap! player-map assoc :nswe "SOUTH")))
+(defn select_orientation [] (cond
+                              (or (= @presskey \z) (= @presskey :up)) (swap! player-map assoc :nswe "NORTH")
+                              (or (= @presskey \q) (= @presskey :left)) (swap! player-map assoc :nswe "WEST")
+                              (or (= @presskey \d) (= @presskey :right)) (swap! player-map assoc :nswe "EAST")
+                              (or (= @presskey \s) (= @presskey :down)) (swap! player-map assoc :nswe "SOUTH")))
 
 ;; Move the robot forward one space or display the message "Impossible your robot is near to board"
- (defn move_forward [] (cond
-                         (= (:nswe @player-map) "NORTH") (if (< (:position_y @player-map) 4)
-                                                           [(swap! player-map update :position_y inc) (reset! moveloop true)]
-                                                           (str "watch out edge"))
-                         (= (:nswe @player-map) "EAST") (if (< (:position_x @player-map) 4)
-                                                          [(swap! player-map update :position_x inc) (reset! moveloop true)]
+(defn move_forward [] (cond
+                        (= (:nswe @player-map) "NORTH") (if (< (:position_y @player-map) 4)
+                                                          [(swap! player-map update :position_y inc) (reset! moveloop true)]
                                                           (str "watch out edge"))
-                         (= (:nswe @player-map) "SOUTH") (if (> (:position_y @player-map) 0)
-                                                           [(swap! player-map update :position_y dec) (reset! moveloop true)]
-                                                           (str "watch out edge"))
-                         (= (:nswe @player-map) "WEST") (if (> (:position_x @player-map) 0)
-                                                          [(swap! player-map update :position_x dec) (reset! moveloop true)]
-                                                          (str "watch out edge"))))
+                        (= (:nswe @player-map) "EAST") (if (< (:position_x @player-map) 4)
+                                                         [(swap! player-map update :position_x inc) (reset! moveloop true)]
+                                                         (str "watch out edge"))
+                        (= (:nswe @player-map) "SOUTH") (if (> (:position_y @player-map) 0)
+                                                          [(swap! player-map update :position_y dec) (reset! moveloop true)]
+                                                          (str "watch out edge"))
+                        (= (:nswe @player-map) "WEST") (if (> (:position_x @player-map) 0)
+                                                         [(swap! player-map update :position_x dec) (reset! moveloop true)]
+                                                         (str "watch out edge"))))
 
 ;; the robot turns to the left
 (defn turn_left [] (cond
@@ -68,7 +105,6 @@
                               (and (= @presskey :enter) (not= (:name @player-map) "")) (reset! quitloop true)
                               ;; Else
                               () (reset! quitloop "no")))
-
 
 ;; Main Fonction
 (defn game [term]
@@ -148,9 +184,17 @@
 
   (println "Hello, Player!")
 
-  (let [term (t/get-terminal :swing)]
-    (t/in-terminal term
-                   (game term)))
+  (read_data_txt)
+  (println @in_data_text)
+  (if (= (test_in_data_text) true)
+    (println "ca marche")
+    (println "ca marche pas"))
+  (println @in_data_text)
+
+
+  ;; (let [term (t/get-terminal :swing)]
+  ;;   (t/in-terminal term
+  ;;                  (game term)))
 
   (println "Bye, Player!"))
 
