@@ -18,23 +18,23 @@
 
       (reset! in_data_text ["File exist"])
       (test_in_data_text)
-      (is (= ["PLACE isn't found at start of data"] @in_data_text))
+      (is (= "PLACE isn't found at start of data" @in_data_text))
 
       (reset! in_data_text ["PLACE" "1" "NORTH"])
       (test_in_data_text)
-      (is (= ["Incorrect element number"] @in_data_text))
+      (is (= "Incorrect element number" @in_data_text))
 
       (reset! in_data_text ["PLACE" "5" "1" "NORTH"])
       (test_in_data_text)
-      (is (= ["Element X incorrect"] @in_data_text))
+      (is (= "Element X incorrect" @in_data_text))
 
       (reset! in_data_text ["PLACE" "1" "8" "NORTH"])
       (test_in_data_text)
-      (is (= ["Element Y incorrect"] @in_data_text))
+      (is (= "Element Y incorrect" @in_data_text))
 
       (reset! in_data_text ["PLACE" "1" "1" "NORD"])
       (test_in_data_text)
-      (is (= ["Element orientation incorrect"] @in_data_text)))))
+      (is (= "Element orientation incorrect" @in_data_text)))))
 
 
 (deftest test-select_orientation

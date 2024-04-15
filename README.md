@@ -8,7 +8,9 @@ Update to make :
 
 - [DO] Incorporate file reading and unit tests.
 
-- Create the interface for reading the data_test.txt file.
+- [DO] Each interface window is put in functions.
+
+- [DO] Create the interface for reading the data_test.txt file.
 
 # Version 1.0 du 02/04/2024
 
