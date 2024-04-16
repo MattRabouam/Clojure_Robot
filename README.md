@@ -12,7 +12,7 @@
 
 - Create the interface for reading the data_test.txt file.
 
-# Version 1.0 du 02/04/2024
+# Version 1.0
 
 # Clojure_Robot
 The application is a simulation of a toy robot moving on a square tabletop, of dimensions 5 units x 5 units.
