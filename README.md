@@ -1,3 +1,17 @@
+# Version 2.0 in dev
+Update to make :
+- [DO] Learn to use Git and integrate it properly into my program. Create a “dev” branch.
+
+- [DO] Break down my code with functions and use a structure.
+
+- [DO] Learn and use unit tests. Using core_test.clj and lein test to lauch. I changed a few functions to make it work better for testing.
+
+- [DO] Incorporate file reading and unit tests.
+
+- [DO] Each interface window is put in functions.
+
+- [DO] Create the interface for reading the data_test.txt file.
+
 # Version 1.0 du 02/04/2024
 
 # Clojure_Robot
