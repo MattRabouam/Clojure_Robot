@@ -1,18 +1,18 @@
-# Version 2.0 in dev
-Update to make :
-- [DO] Learn to use Git and integrate it properly into my program. Create a “dev” branch.
+# Version 2.0
 
-- [DO] Break down my code with functions and use a structure.
+- Learn to use Git and integrate it properly into my program. Create a “dev” branch.
 
-- [DO] Learn and use unit tests. Using core_test.clj and lein test to lauch. I changed a few functions to make it work better for testing.
+- Break down my code with functions and use a structure.
 
-- [DO] Incorporate file reading and unit tests.
+- Learn and use unit tests. Using core_test.clj and lein test to lauch. I changed a few functions to make it work better for testing.
 
-- [DO] Each interface window is put in functions.
+- Incorporate file reading and unit tests.
 
-- [DO] Create the interface for reading the data_test.txt file.
+- Each interface window is put in functions.
 
-# Version 1.0 du 02/04/2024
+- Create the interface for reading the data_test.txt file.
+
+# Version 1.0
 
 # Clojure_Robot
 The application is a simulation of a toy robot moving on a square tabletop, of dimensions 5 units x 5 units.
