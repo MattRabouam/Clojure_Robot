@@ -1,3 +1,10 @@
+# Version 3.0
+
+- Updated the code to remove unnecessary atoms, put the atoms used for loops in the functions directly to avoid potential bugs and try to include "pure" functions.
+
+- Change the reading of the input file so that it can read a series of instructions.
+
+
 # Version 2.0
 
 - Learn to use Git and integrate it properly into my program. Create a “dev” branch.
