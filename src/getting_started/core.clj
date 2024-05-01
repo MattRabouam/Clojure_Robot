@@ -104,8 +104,7 @@
            (cond
              (= "PLACE" (first tokens)) [(test_place tokens error_message)
                                          (if (= @error_message "no_error")
-                                           [(println tokens)
-                                            (swap! player-map assoc :nswe (nth tokens 3))
+                                           [(swap! player-map assoc :nswe (nth tokens 3))
                                             (swap! player-map assoc :position_x (Integer/parseInt (nth tokens 1)))
                                             (swap! player-map assoc :position_y (Integer/parseInt (nth tokens 2)))] ())]
              (and (= "MOVE" (first tokens)) (= @error_message "no_error")) (motion player-map "MOVE")
@@ -117,8 +116,6 @@
  (defn file_reading_window [term keep_data_text player-map]
    (let [error_message (atom "") readloop (atom false)]
      (read_data_txt player-map error_message)
-     (println @player-map)
-     (println @error_message)
      (t/clear term)
      (while (= @readloop false)
        (if (= @error_message "no_error")
