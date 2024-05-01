@@ -1,8 +1,8 @@
 # Version 3.0
 
-- [DO] Updated the code to remove unnecessary atoms, put the atoms used for loops in the functions directly to avoid potential bugs and try to include "pure" functions.
+- Updated the code to remove unnecessary atoms, put the atoms used for loops in the functions directly to avoid potential bugs and try to include "pure" functions.
 
-- [DO] Change the reading of the input file so that it can read a series of instructions.
+- Change the reading of the input file so that it can read a series of instructions.
 
 - updating unit tests
 
