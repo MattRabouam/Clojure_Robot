@@ -8,15 +8,13 @@
  (require '[clojure.java.io :as io])
  (require '[clojure.string :as str])
 
+ 
 ;; global variables
  (def name_data_text "data_test.txt")
  (def alphabet (set "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZàâäéèêëïîôöùûüÿçÀÂÄÉÈÊËÏÎÔÖÙÛÜŸÇ"))
  (def empty_string "                                          ")
 
-
- (def in_data_text (atom nil))
-
-
+ 
 ;; Moves the cursor to a specific coordinate and displays text on the terminal
  (defn text_display [term tab_text]
    (doseq [i tab_text]
@@ -55,13 +53,13 @@
  (defn update_name_player [key nameloop player-map]
    [;; For the player's name, only letters are allowed
     (cond
-                                                        ;; Added a letter to the player's name
+      ;; Added a letter to the player's name
       (contains? alphabet key)  (swap! player-map (fn [m] (assoc m :name (str (:name m) key))))
-                                                        ;; Remove the last letter from the player's name
+      ;; Remove the last letter from the player's name
       (= key :backspace) (swap! player-map (fn [m] (assoc m :name (subs (:name m) 0 (- (count (:name m)) 1)))))
-                                                        ;; Validation
+      ;; Validation
       (and (= key :enter) (not= (:name @player-map) "")) (reset! nameloop true)
-                                                        ;; Else
+      ;; Else
       () ())])
 
 ;; Name selection window
@@ -71,7 +69,7 @@
       (while (not= @nameloop true)
         (let [key (t/get-key-blocking term)]
           (update_name_player key nameloop player-map)
-                                                      ;; Reset the player name line if it has been modified
+          ;; Reset the player name line if it has been modified
           (if (not= key :enter)
             (text_display term [[1 5] empty_string
                                 [1 5] (:name @player-map)]) ()))))])
@@ -79,19 +77,19 @@
 ;; Testing the contents of data.txt
  (defn test_place [tokens error_message]
    (cond
-    ;; The file doesn't exist
+     ;; The file doesn't exist
      (= (nth tokens 0) "File don't exist") (reset! error_message (str "File " (nth tokens 1) " don't exist"))
-    ;; PLACE isn't the 1st element
+     ;; PLACE isn't the 1st element
      (= tokens ["File exist"]) (reset! error_message "PLACE isn't found at start of data")
-    ;; There aren't 4 elements
+     ;; There aren't 4 elements
      (not= (count tokens) 4) (reset! error_message "Incorrect element number")
-    ;; The X coordinate isn't equal to 0, 1, 2, 3 or 4
+     ;; The X coordinate isn't equal to 0, 1, 2, 3 or 4
      (not (contains? #{"0" "1" "2" "3" "4"} (nth tokens 1))) (reset! error_message "Element X incorrect")
-    ;; The Y coordinate isn't equal to 0, 1, 2, 3 or 4
+     ;; The Y coordinate isn't equal to 0, 1, 2, 3 or 4
      (not (contains? #{"0" "1" "2" "3" "4"} (nth tokens 2))) (reset! error_message "Element Y incorrect")
-    ;; Orientation doesn't equal NORTH, WEST, EAST or SOUTH
+     ;; Orientation doesn't equal NORTH, WEST, EAST or SOUTH
      (not (contains? #{"NORTH" "WEST" "EAST" "SOUTH"} (nth tokens 3))) (reset! error_message "Element orientation incorrect")
-    ;; data OK
+     ;; data OK
      :else (reset! error_message "no_error")))
 
 ;; Read the data_test.txt file
@@ -230,4 +228,3 @@
                     (game term)))
 
    (println "Bye, Player!"))
-
