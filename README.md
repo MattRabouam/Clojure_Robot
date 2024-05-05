@@ -2,6 +2,7 @@
 
 - [DO] Change the “motion” function to make it as “pure” as possible.
 
+
 # Version 3.0
 
 - Updated the code to remove unnecessary atoms, put the atoms used for loops in the functions directly to avoid potential bugs and try to include "pure" functions.
@@ -24,6 +25,7 @@
 - Each interface window is put in functions.
 
 - Create the interface for reading the data_test.txt file.
+
 
 # Version 1.0
 
