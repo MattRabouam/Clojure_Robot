@@ -32,22 +32,24 @@
 
 ;; Move or turn the robot
  (defn motion [player-map action]
-   (cond
-     (= action "LEFT") (cond
-                         (= (:nswe @player-map) "NORTH") (swap! player-map assoc :nswe "WEST")
-                         (= (:nswe @player-map) "WEST") (swap! player-map assoc :nswe "SOUTH")
-                         (= (:nswe @player-map) "SOUTH") (swap! player-map assoc :nswe "EAST")
-                         (= (:nswe @player-map) "EAST") (swap! player-map assoc :nswe "NORTH"))
-     (= action "RIGHT") (cond
-                          (= (:nswe @player-map) "NORTH") (swap! player-map assoc :nswe "EAST")
-                          (= (:nswe @player-map) "WEST") (swap! player-map assoc :nswe "NORTH")
-                          (= (:nswe @player-map) "SOUTH") (swap! player-map assoc :nswe "WEST")
-                          (= (:nswe @player-map) "EAST") (swap! player-map assoc :nswe "SOUTH"))
-     (= action "MOVE") (cond
-                         (and (= (:nswe @player-map) "NORTH") (< (:position_y @player-map) 4)) (swap! player-map update :position_y inc)
-                         (and (= (:nswe @player-map) "EAST") (< (:position_x @player-map) 4)) (swap! player-map update :position_x inc)
-                         (and (= (:nswe @player-map) "SOUTH") (> (:position_y @player-map) 0)) (swap! player-map update :position_y dec)
-                         (and (= (:nswe @player-map) "WEST") (> (:position_x @player-map) 0)) (swap! player-map update :position_x dec))))
+   (let [update-player-map (atom @player-map)]
+        (cond
+          (= action "LEFT") (cond
+                              (= (:nswe @player-map) "NORTH") (swap! update-player-map assoc :nswe "WEST")
+                              (= (:nswe @player-map) "WEST") (swap! update-player-map assoc :nswe "SOUTH")
+                              (= (:nswe @player-map) "SOUTH") (swap! update-player-map assoc :nswe "EAST")
+                              (= (:nswe @player-map) "EAST") (swap! update-player-map assoc :nswe "NORTH"))
+          (= action "RIGHT") (cond
+                               (= (:nswe @player-map) "NORTH") (swap! update-player-map assoc :nswe "EAST")
+                               (= (:nswe @player-map) "WEST") (swap! update-player-map assoc :nswe "NORTH")
+                               (= (:nswe @player-map) "SOUTH") (swap! update-player-map assoc :nswe "WEST")
+                               (= (:nswe @player-map) "EAST") (swap! update-player-map assoc :nswe "SOUTH"))
+          (= action "MOVE") (cond
+                              (and (= (:nswe @player-map) "NORTH") (< (:position_y @player-map) 4)) (swap! update-player-map update :position_y inc)
+                              (and (= (:nswe @player-map) "EAST") (< (:position_x @player-map) 4)) (swap! update-player-map update :position_x inc)
+                              (and (= (:nswe @player-map) "SOUTH") (> (:position_y @player-map) 0)) (swap! update-player-map update :position_y dec)
+                              (and (= (:nswe @player-map) "WEST") (> (:position_x @player-map) 0)) (swap! update-player-map update :position_x dec)))
+     @update-player-map))
 
 ;; Updated player name
  (defn update_name_player [key nameloop player-map]
@@ -105,9 +107,9 @@
                                            [(swap! player-map assoc :nswe (nth tokens 3))
                                             (swap! player-map assoc :position_x (Integer/parseInt (nth tokens 1)))
                                             (swap! player-map assoc :position_y (Integer/parseInt (nth tokens 2)))] ())]
-             (and (= "MOVE" (first tokens)) (= @error_message "no_error")) (motion player-map "MOVE")
-             (and (= "LEFT" (first tokens)) (= @error_message "no_error")) (motion player-map "LEFT")
-             (and (= "RIGHT" (first tokens)) (= @error_message "no_error")) (motion player-map "RIGHT")))))
+             (and (= "MOVE" (first tokens)) (= @error_message "no_error")) (reset! player-map (motion player-map "MOVE"))
+             (and (= "LEFT" (first tokens)) (= @error_message "no_error")) (reset! player-map (motion player-map "LEFT"))
+             (and (= "RIGHT" (first tokens)) (= @error_message "no_error")) (reset! player-map (motion player-map "RIGHT"))))))
      (reset! error_message ["File don't exist" name_data_text])))
 
 ;; Data_test.txt file reading window
@@ -182,11 +184,11 @@
           (text_display term [[1 10] empty_string [1 10]])
           (cond
             (or (= key \z) (= key :up)) [(let [test_coor (str (:position_x @player-map) (:position_y @player-map))]
-                                           (motion player-map "MOVE")
+                                           (reset! player-map (motion player-map "MOVE"))
                                            (if (= test_coor (str (:position_x @player-map) (:position_y @player-map)))
                                              (t/put-string term "Impossible your robot is near to board") (reset! moveloop true)))]
-            (or (= key \q) (= key :left)) [(motion player-map "LEFT") (reset! moveloop true)]
-            (or (= key \d) (= key :right)) [(motion player-map "RIGHT") (reset! moveloop true)]
+            (or (= key \q) (= key :left)) [(reset! player-map (motion player-map "LEFT")) (reset! moveloop true)]
+            (or (= key \d) (= key :right)) [(reset! player-map (motion player-map "RIGHT")) (reset! moveloop true)]
             (= key :backspace) [(reset! moveloop true) (reset! motionloop true)]
             (or (= key \x) (= key :escape)) [(reset! moveloop true) (reset! motionloop true) (reset! generaloop true)]))))])
 
